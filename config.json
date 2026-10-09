@@ -13,7 +13,7 @@
     "ONDO": {"coingecko_id": "ondo-finance", "name": "Ondo"},
     "SYRUP":{"coingecko_id": "syrup",        "name": "Maple (SYRUP)"},
     "HYPE": {"coingecko_id": "hyperliquid",  "name": "Hyperliquid"},
-    "CC":   {"coingecko_id": "canton",       "name": "Canton Coin"},
+    "CC":   {"coingecko_id": "canton-network",       "name": "Canton Coin"},
     "AAVE": {"coingecko_id": "aave",         "name": "Aave"},
     "XMR":  {"coingecko_id": "monero",       "name": "Monero"},
     "ENA":  {"coingecko_id": "ethena",       "name": "Ethena"},
