@@ -92,11 +92,25 @@ def fetch_daily(cg_id, start: date):
     return out
 
 
+def suggest_ids(ticker, name):
+    """When an id 404s, search CoinGecko and print likely matches."""
+    try:
+        res = get("/search", {"query": name})
+        coins = res.get("coins", [])[:5]
+        print(f"       CoinGecko matches for '{name}':")
+        for c in coins:
+            print(f"         id={c['id']:<28} {c['name']} ({c['symbol']})  rank={c.get('market_cap_rank')}")
+        print(f"       Put the right id in config.json under {ticker} and run again.")
+    except Exception as e:
+        print(f"       (search also failed: {e})")
+
+
 def fill():
     start_default = date.fromisoformat(CONFIG["backfill_start"])
     existing = load_existing()
     last = last_date_per_asset(existing)
     new_rows = []
+    failed = []
 
     for ticker, meta in CONFIG["assets"].items():
         start = start_default
@@ -106,7 +120,16 @@ def fill():
             print(f"{ticker:6} up to date")
             continue
         print(f"{ticker:6} fetching from {start}")
-        points = fetch_daily(meta["coingecko_id"], start)
+        try:
+            points = fetch_daily(meta["coingecko_id"], start)
+        except requests.HTTPError as e:
+            failed.append(ticker)
+            print(f"       FAILED: {e}")
+            if e.response is not None and e.response.status_code == 404:
+                time.sleep(PAUSE)
+                suggest_ids(ticker, meta["name"])
+            time.sleep(PAUSE)
+            continue
         added = 0
         for d, (price, cap) in sorted(points.items()):
             if (d, ticker) in existing:
@@ -118,19 +141,22 @@ def fill():
         print(f"       +{added} rows (first available: {first})")
         time.sleep(PAUSE)
 
-    if not new_rows:
+    if new_rows:
+        PRICES.parent.mkdir(exist_ok=True)
+        write_header = not PRICES.exists()
+        with PRICES.open("a", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=FIELDS)
+            if write_header:
+                w.writeheader()
+            new_rows.sort(key=lambda r: (r["date"], r["asset"]))
+            w.writerows(new_rows)
+        print(f"Appended {len(new_rows)} rows to {PRICES.relative_to(ROOT)}")
+    else:
         print("Nothing new.")
-        return
 
-    PRICES.parent.mkdir(exist_ok=True)
-    write_header = not PRICES.exists()
-    with PRICES.open("a", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=FIELDS)
-        if write_header:
-            w.writeheader()
-        new_rows.sort(key=lambda r: (r["date"], r["asset"]))
-        w.writerows(new_rows)
-    print(f"Appended {len(new_rows)} rows to {PRICES.relative_to(ROOT)}")
+    if failed:
+        # Rows that worked are saved above; fail the run so the problem is visible.
+        sys.exit(f"Failed for: {', '.join(failed)}. Everything else was saved.")
 
 
 def check():
