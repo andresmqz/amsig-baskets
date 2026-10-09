@@ -1,7 +1,7 @@
 {
   "name": "Amsig Basket",
   "selected_on": "2026-10-01",
-  "live_start": null,
+  "live_start": "2026-10-09",
   "backfill_start": "2026-01-01",
   "base_value": 100,
   "price_source": "CoinGecko, daily snapshot at 00:00 UTC, USD",
