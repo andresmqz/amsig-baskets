@@ -22,8 +22,10 @@ jobs:
           COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
         run: python fetch_prices.py update
       - name: Rebuild index
+        if: ${{ !cancelled() }}   # still runs if one coin failed, so the rest gets saved
         run: python compute_index.py
       - name: Commit data
+        if: ${{ !cancelled() }}
         run: |
           git config user.name "amsig-bot"
           git config user.email "amsig-bot@users.noreply.github.com"
