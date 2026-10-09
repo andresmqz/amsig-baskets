@@ -1,0 +1,32 @@
+name: Amsig Basket daily update
+
+on:
+  schedule:
+    - cron: "12 1 * * *"   # 01:12 UTC every day
+  workflow_dispatch:        # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Fetch new prices
+        env:
+          COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+        run: python fetch_prices.py update
+      - name: Rebuild index
+        run: python compute_index.py
+      - name: Commit data
+        run: |
+          git config user.name "amsig-bot"
+          git config user.email "amsig-bot@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "Daily update $(date -u +%F)"
+          git push
