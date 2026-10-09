@@ -1,0 +1,78 @@
+{
+  "name": "Amsig Basket",
+  "selected_on": "2026-10-01",
+  "live_start": null,
+  "backfill_start": "2026-01-01",
+  "base_value": 100,
+  "price_source": "CoinGecko, daily snapshot at 00:00 UTC, USD",
+
+  "assets": {
+    "ETH":  {"coingecko_id": "ethereum",     "name": "Ethereum"},
+    "LINK": {"coingecko_id": "chainlink",    "name": "Chainlink"},
+    "BNB":  {"coingecko_id": "binancecoin",  "name": "BNB"},
+    "ONDO": {"coingecko_id": "ondo-finance", "name": "Ondo"},
+    "SYRUP":{"coingecko_id": "syrup",        "name": "Maple (SYRUP)"},
+    "HYPE": {"coingecko_id": "hyperliquid",  "name": "Hyperliquid"},
+    "CC":   {"coingecko_id": "canton",       "name": "Canton Coin"},
+    "AAVE": {"coingecko_id": "aave",         "name": "Aave"},
+    "XMR":  {"coingecko_id": "monero",       "name": "Monero"},
+    "ENA":  {"coingecko_id": "ethena",       "name": "Ethena"},
+    "BTC":  {"coingecko_id": "bitcoin",      "name": "Bitcoin"}
+  },
+
+  "schemes": {
+    "basket_ex_btc": {
+      "label": "Amsig Basket (ex-BTC)",
+      "group": "official",
+      "assets": ["ETH", "LINK", "BNB", "ONDO", "SYRUP", "HYPE", "CC", "AAVE", "XMR", "ENA"],
+      "weighting": "equal",
+      "rebalance": "none"
+    },
+    "basket_with_btc": {
+      "label": "Amsig Basket + BTC",
+      "group": "official",
+      "assets": ["BTC", "ETH", "LINK", "BNB", "ONDO", "SYRUP", "HYPE", "CC", "AAVE", "XMR", "ENA"],
+      "weighting": "equal",
+      "rebalance": "none"
+    },
+
+    "bench_btc": {
+      "label": "BTC only",
+      "group": "benchmark",
+      "assets": ["BTC"],
+      "weighting": "equal",
+      "rebalance": "none"
+    },
+    "bench_eth": {
+      "label": "ETH only",
+      "group": "benchmark",
+      "assets": ["ETH"],
+      "weighting": "equal",
+      "rebalance": "none"
+    },
+
+    "lab_ex_btc_monthly": {
+      "label": "Lab: ex-BTC, equal weight, monthly rebalance",
+      "group": "lab",
+      "assets": ["ETH", "LINK", "BNB", "ONDO", "SYRUP", "HYPE", "CC", "AAVE", "XMR", "ENA"],
+      "weighting": "equal",
+      "rebalance": "monthly"
+    },
+    "lab_ex_btc_mcap_capped": {
+      "label": "Lab: ex-BTC, market-cap weight, 25% cap, quarterly rebalance",
+      "group": "lab",
+      "assets": ["ETH", "LINK", "BNB", "ONDO", "SYRUP", "HYPE", "CC", "AAVE", "XMR", "ENA"],
+      "weighting": "mcap",
+      "cap": 0.25,
+      "rebalance": "quarterly"
+    },
+    "lab_conviction_example": {
+      "label": "Lab: conviction weights (example, edit me)",
+      "group": "lab",
+      "assets": ["ETH", "LINK", "BNB", "ONDO", "SYRUP", "HYPE", "CC", "AAVE", "XMR", "ENA"],
+      "weighting": "custom",
+      "weights": {"ETH": 25, "AAVE": 10, "LINK": 10, "CC": 10, "HYPE": 10, "ONDO": 8, "BNB": 8, "SYRUP": 7, "ENA": 6, "XMR": 6},
+      "rebalance": "none"
+    }
+  }
+}
