@@ -7,6 +7,10 @@ scheme in the config, and writes:
     data/index.csv     one column per scheme, one row per day
     data/summary.csv   return, volatility, drawdown, Sharpe, vs BTC, per period
     data/weights.csv   each scheme's current (drifted) weights on the last day
+
+Trading costs: every rebalance pays cost_bps (config.json, default 15) on the value
+traded. Buy-and-hold schemes never trade, so they pay nothing. summary.csv reports
+annualized turnover and the cost drag for each period.
     data/contributions.csv  per scheme, period and asset: contribution to return,
                             the asset's own return, and its weight at the start and end
 
@@ -92,26 +96,36 @@ def build(scheme, prices, caps, start):
     gaps = int(prices.loc[begin:, assets].isna().sum().sum())
 
     base = CONFIG["base_value"]
+    cost_rate = CONFIG.get("cost_bps", 15) / 10_000  # per unit of value traded, one way
     rebal = rebalance_dates(px.index, scheme["rebalance"])
     units = target_weights(scheme, assets, caps.loc[begin]) * base / px.iloc[0]
-    levels, held = [], []
+    levels, held, costs, traded = [], [], [], []
     for d, row in px.iterrows():
         value = float((units * row).sum())
+        cost = trade = 0.0
         if d in rebal:
-            units = target_weights(scheme, assets, caps.loc[d]) * value / row
+            w = target_weights(scheme, assets, caps.loc[d])
+            trade = float(((w * value / row - units).abs() * row).sum())
+            cost = trade * cost_rate
+            value -= cost
+            units = w * value / row
         levels.append(value)
         held.append(units.copy())  # units carried from this day into the next
+        costs.append(cost)
+        traded.append(trade)
     series = pd.Series(levels, index=px.index)
     holdings = pd.DataFrame(held, index=px.index)
+    flows = pd.DataFrame({"cost": costs, "traded": traded}, index=px.index)
     drifted = units * px.iloc[-1]
-    return series, drifted / drifted.sum(), begin, gaps, px, holdings
+    return series, drifted / drifted.sum(), begin, gaps, px, holdings, flows
 
 
-def contributions(series, px, holdings, a, b):
+def contributions(series, px, holdings, flows, a, b):
     """
     Each asset's contribution to the return between dates a and b.
     Contribution = sum over days of (units held into the day x price change) / value at a.
-    The contributions add up exactly to the scheme's total return, with or without rebalancing.
+    Trading costs paid in the period are reported as their own row, "_costs".
+    Together they add up exactly to the scheme's total return.
     """
     p = px.loc[a:b]
     h = holdings.loc[a:b]
@@ -119,10 +133,25 @@ def contributions(series, px, holdings, a, b):
     contrib = (h.shift(1).iloc[1:] * p.diff().iloc[1:]).sum() / v0
     start_w = h.loc[a] * p.loc[a] / v0
     prev = h.shift(1).loc[b] if len(h) > 1 else h.loc[a]
-    end_w = prev * p.loc[b] / series.loc[b]
+    end_val = prev * p.loc[b]
+    end_w = end_val / end_val.sum()
     asset_ret = p.loc[b] / p.loc[a] - 1
-    return pd.DataFrame({"contribution": contrib, "asset_return": asset_ret,
-                         "start_weight": start_w, "end_weight": end_w})
+    out = pd.DataFrame({"contribution": contrib, "asset_return": asset_ret,
+                        "start_weight": start_w, "end_weight": end_w})
+    paid = flows.loc[a:b, "cost"].iloc[1:].sum()
+    if paid > 0:
+        out.loc["_costs"] = [-paid / v0, np.nan, np.nan, np.nan]
+    return out
+
+
+def trading(series, flows, a, b):
+    """Annualized turnover (one-way value traded / average value) and cost drag over a period."""
+    f = flows.loc[a:b].iloc[1:]
+    s = series.loc[a:b]
+    days = max(len(s) - 1, 1)
+    turnover = f["traded"].sum() / s.mean() * DAYS_PER_YEAR / days
+    drag = f["cost"].sum() / s.iloc[0]
+    return {"turnover_ann": round(turnover, 4), "cost_drag": round(-drag, 4)}
 
 
 def stats(series, btc):
@@ -164,8 +193,8 @@ def main():
     indices, weights, rows, contrib_rows, parts = {}, [], [], [], {}
     for key, scheme in CONFIG["schemes"].items():
         try:
-            series, drifted, begin, gaps, px, holdings = build(scheme, prices, caps, start)
-            parts[key] = (px, holdings)
+            series, drifted, begin, gaps, px, holdings, flows = build(scheme, prices, caps, start)
+            parts[key] = (px, holdings, flows)
         except Exception as e:
             print(f"! {key}: skipped ({e})")
             continue
@@ -187,13 +216,15 @@ def main():
         for name, s in periods.items():
             st = stats(s, btc)
             if st:
+                px, holdings, flows = parts[key]
+                tr = trading(series, flows, s.index[0], s.index[-1])
                 rows.append({"scheme": key, "label": scheme["label"], "group": scheme["group"],
-                             "period": name, **st})
-                px, holdings = parts[key]
-                c = contributions(series, px, holdings, s.index[0], s.index[-1])
+                             "period": name, **st, **tr})
+                c = contributions(series, px, holdings, flows, s.index[0], s.index[-1])
                 for asset, r in c.iterrows():
                     contrib_rows.append({"scheme": key, "period": name, "asset": asset,
-                                         **{k: round(float(v), 4) for k, v in r.items()}})
+                                         **{k: (None if pd.isna(v) else round(float(v), 4))
+                                            for k, v in r.items()}})
 
     pd.DataFrame(indices).round(4).to_csv(DATA / "index.csv", index_label="date")
     summary = pd.DataFrame(rows)
@@ -202,7 +233,8 @@ def main():
     pd.DataFrame(contrib_rows).to_csv(DATA / "contributions.csv", index=False)
 
     view = summary[summary.period == "full"][
-        ["label", "total_return", "excess_vs_btc", "ann_volatility", "sharpe_rf0", "max_drawdown"]]
+        ["label", "total_return", "excess_vs_btc", "ann_volatility", "sharpe_rf0", "max_drawdown",
+         "turnover_ann", "cost_drag"]]
     print("\nFull period:")
     print(view.to_string(index=False))
     print("\nWrote data/index.csv, data/summary.csv, data/weights.csv, data/contributions.csv")

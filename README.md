@@ -9,6 +9,7 @@ pip install -r requirements.txt
 python fetch_prices.py check      # make sure every id points at the right coin
 python fetch_prices.py backfill   # fetches daily prices since 2026-01-01 (takes a few minutes)
 python compute_index.py           # builds the index for every scheme
+python compute_risk.py            # correlations, beta vs BTC, risk contributions
 ```
 
 `check` matters most for CC (`canton`) and SYRUP (`syrup`). If either id is wrong, find the right one in the URL of the coin's CoinGecko page and update `config.json`.
@@ -28,7 +29,8 @@ The backfill is slow without an API key because of CoinGecko's rate limits. A fr
 |---|---|
 | `config.json` | assets, CoinGecko ids, and every weighting scheme |
 | `fetch_prices.py` | fetches prices and appends to `data/prices.csv`; never edits existing rows |
-| `compute_index.py` | builds `data/index.csv`, `data/summary.csv`, `data/weights.csv` |
+| `compute_index.py` | builds `data/index.csv`, `data/summary.csv`, `data/weights.csv`, `data/contributions.csv` |
+| `compute_risk.py` | builds `data/risk.csv`, `data/correlations.json`, `data/risk_contributions.csv`, `data/rolling.csv` |
 | `.github/workflows/daily.yml` | runs both scripts every day at 01:12 UTC and commits the data |
 
 ## Trying other weightings
@@ -38,6 +40,8 @@ Add a scheme to `config.json` under `schemes` and rerun `compute_index.py`. Opti
 - `"weighting"`: `"equal"`, `"custom"` (give `"weights"`, any numbers, they get normalised), or `"mcap"` (optional `"cap"`, e.g. `0.25`)
 - `"rebalance"`: `"none"`, `"monthly"` or `"quarterly"`
 - `"group"`: `"official"`, `"benchmark"` or `"lab"`
+
+Rebalancing pays a trading cost of `cost_bps` (default 15, i.e. 0.15% of the value traded). Set `"cost_bps"` at the top level of `config.json` to change it.
 
 Lab schemes are free to change. The two official schemes should not change after the rules are published, except through the change log.
 
