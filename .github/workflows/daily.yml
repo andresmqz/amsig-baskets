@@ -24,6 +24,9 @@ jobs:
       - name: Rebuild index
         if: ${{ !cancelled() }}   # still runs if one coin failed, so the rest gets saved
         run: python compute_index.py
+      - name: Rebuild risk analytics
+        if: ${{ !cancelled() }}
+        run: python compute_risk.py
       - name: Commit data
         if: ${{ !cancelled() }}
         run: |
