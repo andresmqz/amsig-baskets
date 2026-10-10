@@ -1,0 +1,15 @@
+scheme,group,period,observations,beta_btc,alpha_ann,correlation_btc,r_squared,tracking_error,information_ratio
+basket_ex_btc,official,full,281,0.964,0.4091,0.781,0.611,0.3512,1.16
+basket_ex_btc,official,backtest,281,0.964,0.4091,0.781,0.611,0.3512,1.16
+basket_with_btc,official,full,281,0.967,0.3715,0.807,0.652,0.3225,1.15
+basket_with_btc,official,backtest,281,0.967,0.3715,0.807,0.652,0.3225,1.15
+bench_btc,benchmark,full,281,1.0,-0.0,1.0,1.0,0.0,-0.04
+bench_btc,benchmark,backtest,281,1.0,-0.0,1.0,1.0,0.0,-0.04
+bench_eth,benchmark,full,281,1.235,-0.0636,0.906,0.821,0.2833,-0.21
+bench_eth,benchmark,backtest,281,1.235,-0.0636,0.906,0.821,0.2833,-0.21
+lab_ex_btc_monthly,lab,full,281,0.988,0.4159,0.796,0.634,0.3415,1.22
+lab_ex_btc_monthly,lab,backtest,281,0.988,0.4159,0.796,0.634,0.3415,1.22
+lab_ex_btc_mcap_capped,lab,full,281,0.948,0.2863,0.855,0.732,0.2625,1.09
+lab_ex_btc_mcap_capped,lab,backtest,281,0.948,0.2863,0.855,0.732,0.2625,1.09
+lab_conviction_example,lab,full,281,0.995,0.3732,0.811,0.658,0.3268,1.14
+lab_conviction_example,lab,backtest,281,0.995,0.3732,0.811,0.658,0.3268,1.14

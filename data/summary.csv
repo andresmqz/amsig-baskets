@@ -1,15 +1,15 @@
-scheme,label,group,period,start,end,days,total_return,btc_return_same_window,excess_vs_btc,ann_volatility,sharpe_rf0,max_drawdown
-basket_ex_btc,Amsig Basket (ex-BTC),official,full,2026-01-01,2026-10-09,281,0.2252,-0.0672,0.2925,0.5622,0.75,-0.3691
-basket_ex_btc,Amsig Basket (ex-BTC),official,backtest,2026-01-01,2026-10-09,281,0.2252,-0.0672,0.2925,0.5622,0.75,-0.3691
-basket_with_btc,Amsig Basket + BTC,official,full,2026-01-01,2026-10-09,281,0.1986,-0.0672,0.2659,0.5458,0.7,-0.3634
-basket_with_btc,Amsig Basket + BTC,official,backtest,2026-01-01,2026-10-09,281,0.1986,-0.0672,0.2659,0.5458,0.7,-0.3634
-bench_btc,BTC only,benchmark,full,2026-01-01,2026-10-09,281,-0.0672,-0.0672,-0.0,0.4555,0.03,-0.3956
-bench_btc,BTC only,benchmark,backtest,2026-01-01,2026-10-09,281,-0.0672,-0.0672,-0.0,0.4555,0.03,-0.3956
-bench_eth,ETH only,benchmark,full,2026-01-01,2026-10-09,281,-0.1674,-0.0672,-0.1002,0.6205,-0.08,-0.5328
-bench_eth,ETH only,benchmark,backtest,2026-01-01,2026-10-09,281,-0.1674,-0.0672,-0.1002,0.6205,-0.08,-0.5328
-lab_ex_btc_monthly,"Lab: ex-BTC, equal weight, monthly rebalance",lab,full,2026-01-01,2026-10-09,281,0.2327,-0.0672,0.2999,0.5647,0.76,-0.3863
-lab_ex_btc_monthly,"Lab: ex-BTC, equal weight, monthly rebalance",lab,backtest,2026-01-01,2026-10-09,281,0.2327,-0.0672,0.2999,0.5647,0.76,-0.3863
-lab_ex_btc_mcap_capped,"Lab: ex-BTC, market-cap weight, 25% cap, quarterly rebalance",lab,full,2026-01-01,2026-10-09,281,0.1415,-0.0672,0.2088,0.5047,0.59,-0.3598
-lab_ex_btc_mcap_capped,"Lab: ex-BTC, market-cap weight, 25% cap, quarterly rebalance",lab,backtest,2026-01-01,2026-10-09,281,0.1415,-0.0672,0.2088,0.5047,0.59,-0.3598
-lab_conviction_example,"Lab: conviction weights (example, edit me)",lab,full,2026-01-01,2026-10-09,281,0.1942,-0.0672,0.2615,0.5587,0.69,-0.3543
-lab_conviction_example,"Lab: conviction weights (example, edit me)",lab,backtest,2026-01-01,2026-10-09,281,0.1942,-0.0672,0.2615,0.5587,0.69,-0.3543
+scheme,label,group,period,start,end,days,total_return,btc_return_same_window,excess_vs_btc,ann_volatility,sharpe_rf0,max_drawdown,turnover_ann,cost_drag
+basket_ex_btc,Amsig Basket (ex-BTC),official,full,2026-01-01,2026-10-09,281,0.2252,-0.0672,0.2925,0.5622,0.75,-0.3691,0.0,-0.0
+basket_ex_btc,Amsig Basket (ex-BTC),official,backtest,2026-01-01,2026-10-09,281,0.2252,-0.0672,0.2925,0.5622,0.75,-0.3691,0.0,-0.0
+basket_with_btc,Amsig Basket + BTC,official,full,2026-01-01,2026-10-09,281,0.1986,-0.0672,0.2659,0.5458,0.7,-0.3634,0.0,-0.0
+basket_with_btc,Amsig Basket + BTC,official,backtest,2026-01-01,2026-10-09,281,0.1986,-0.0672,0.2659,0.5458,0.7,-0.3634,0.0,-0.0
+bench_btc,BTC only,benchmark,full,2026-01-01,2026-10-09,281,-0.0672,-0.0672,-0.0,0.4555,0.03,-0.3956,0.0,-0.0
+bench_btc,BTC only,benchmark,backtest,2026-01-01,2026-10-09,281,-0.0672,-0.0672,-0.0,0.4555,0.03,-0.3956,0.0,-0.0
+bench_eth,ETH only,benchmark,full,2026-01-01,2026-10-09,281,-0.1674,-0.0672,-0.1002,0.6205,-0.08,-0.5328,0.0,-0.0
+bench_eth,ETH only,benchmark,backtest,2026-01-01,2026-10-09,281,-0.1674,-0.0672,-0.1002,0.6205,-0.08,-0.5328,0.0,-0.0
+lab_ex_btc_monthly,"Lab: ex-BTC, equal weight, monthly rebalance",lab,full,2026-01-01,2026-10-09,281,0.2307,-0.0672,0.298,0.5647,0.76,-0.3868,1.4054,-0.0015
+lab_ex_btc_monthly,"Lab: ex-BTC, equal weight, monthly rebalance",lab,backtest,2026-01-01,2026-10-09,281,0.2307,-0.0672,0.298,0.5647,0.76,-0.3868,1.4054,-0.0015
+lab_ex_btc_mcap_capped,"Lab: ex-BTC, market-cap weight, 25% cap, quarterly rebalance",lab,full,2026-01-01,2026-10-09,281,0.1409,-0.0672,0.2082,0.5047,0.59,-0.3598,0.4207,-0.0004
+lab_ex_btc_mcap_capped,"Lab: ex-BTC, market-cap weight, 25% cap, quarterly rebalance",lab,backtest,2026-01-01,2026-10-09,281,0.1409,-0.0672,0.2082,0.5047,0.59,-0.3598,0.4207,-0.0004
+lab_conviction_example,"Lab: conviction weights (example, edit me)",lab,full,2026-01-01,2026-10-09,281,0.1942,-0.0672,0.2615,0.5587,0.69,-0.3543,0.0,-0.0
+lab_conviction_example,"Lab: conviction weights (example, edit me)",lab,backtest,2026-01-01,2026-10-09,281,0.1942,-0.0672,0.2615,0.5587,0.69,-0.3543,0.0,-0.0
