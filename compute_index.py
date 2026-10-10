@@ -7,6 +7,8 @@ scheme in the config, and writes:
     data/index.csv     one column per scheme, one row per day
     data/summary.csv   return, volatility, drawdown, Sharpe, vs BTC, per period
     data/weights.csv   each scheme's current (drifted) weights on the last day
+    data/contributions.csv  per scheme, period and asset: contribution to return,
+                            the asset's own return, and its weight at the start and end
 
 Periods: "full" covers everything. Once live_start is set in config.json,
 "backtest" covers the days before it and "live" covers the days from it on.
@@ -92,15 +94,35 @@ def build(scheme, prices, caps, start):
     base = CONFIG["base_value"]
     rebal = rebalance_dates(px.index, scheme["rebalance"])
     units = target_weights(scheme, assets, caps.loc[begin]) * base / px.iloc[0]
-    levels = []
+    levels, held = [], []
     for d, row in px.iterrows():
         value = float((units * row).sum())
         if d in rebal:
             units = target_weights(scheme, assets, caps.loc[d]) * value / row
         levels.append(value)
+        held.append(units.copy())  # units carried from this day into the next
     series = pd.Series(levels, index=px.index)
+    holdings = pd.DataFrame(held, index=px.index)
     drifted = units * px.iloc[-1]
-    return series, drifted / drifted.sum(), begin, gaps
+    return series, drifted / drifted.sum(), begin, gaps, px, holdings
+
+
+def contributions(series, px, holdings, a, b):
+    """
+    Each asset's contribution to the return between dates a and b.
+    Contribution = sum over days of (units held into the day x price change) / value at a.
+    The contributions add up exactly to the scheme's total return, with or without rebalancing.
+    """
+    p = px.loc[a:b]
+    h = holdings.loc[a:b]
+    v0 = series.loc[a]
+    contrib = (h.shift(1).iloc[1:] * p.diff().iloc[1:]).sum() / v0
+    start_w = h.loc[a] * p.loc[a] / v0
+    prev = h.shift(1).loc[b] if len(h) > 1 else h.loc[a]
+    end_w = prev * p.loc[b] / series.loc[b]
+    asset_ret = p.loc[b] / p.loc[a] - 1
+    return pd.DataFrame({"contribution": contrib, "asset_return": asset_ret,
+                         "start_weight": start_w, "end_weight": end_w})
 
 
 def stats(series, btc):
@@ -139,10 +161,11 @@ def main():
         else:
             print(f"  {a:6} NO DATA")
 
-    indices, weights, rows = {}, [], []
+    indices, weights, rows, contrib_rows, parts = {}, [], [], [], {}
     for key, scheme in CONFIG["schemes"].items():
         try:
-            series, drifted, begin, gaps = build(scheme, prices, caps, start)
+            series, drifted, begin, gaps, px, holdings = build(scheme, prices, caps, start)
+            parts[key] = (px, holdings)
         except Exception as e:
             print(f"! {key}: skipped ({e})")
             continue
@@ -166,17 +189,23 @@ def main():
             if st:
                 rows.append({"scheme": key, "label": scheme["label"], "group": scheme["group"],
                              "period": name, **st})
+                px, holdings = parts[key]
+                c = contributions(series, px, holdings, s.index[0], s.index[-1])
+                for asset, r in c.iterrows():
+                    contrib_rows.append({"scheme": key, "period": name, "asset": asset,
+                                         **{k: round(float(v), 4) for k, v in r.items()}})
 
     pd.DataFrame(indices).round(4).to_csv(DATA / "index.csv", index_label="date")
     summary = pd.DataFrame(rows)
     summary.to_csv(DATA / "summary.csv", index=False)
     pd.DataFrame(weights).to_csv(DATA / "weights.csv", index=False)
+    pd.DataFrame(contrib_rows).to_csv(DATA / "contributions.csv", index=False)
 
     view = summary[summary.period == "full"][
         ["label", "total_return", "excess_vs_btc", "ann_volatility", "sharpe_rf0", "max_drawdown"]]
     print("\nFull period:")
     print(view.to_string(index=False))
-    print("\nWrote data/index.csv, data/summary.csv, data/weights.csv")
+    print("\nWrote data/index.csv, data/summary.csv, data/weights.csv, data/contributions.csv")
 
 
 if __name__ == "__main__":
