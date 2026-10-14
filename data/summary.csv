@@ -1,22 +1,22 @@
 scheme,label,group,period,start,end,days,total_return,btc_return_same_window,excess_vs_btc,ann_volatility,sharpe_rf0,max_drawdown,turnover_ann,cost_drag
-basket_ex_btc,Amsig Basket (ex-BTC),official,full,2026-01-01,2026-10-12,284,0.285,-0.0444,0.3293,0.5603,0.86,-0.3691,0.0,-0.0
+basket_ex_btc,Amsig Basket (ex-BTC),official,full,2026-01-01,2026-10-13,285,0.2046,-0.066,0.2706,0.564,0.7,-0.3691,0.0,-0.0
 basket_ex_btc,Amsig Basket (ex-BTC),official,backtest,2026-01-01,2026-10-09,281,0.2252,-0.0672,0.2925,0.5622,0.75,-0.3691,0.0,-0.0
-basket_ex_btc,Amsig Basket (ex-BTC),official,live,2026-10-09,2026-10-12,3,0.0488,0.0245,0.0242,0.2356,24.87,0.0,0.0,-0.0
-basket_with_btc,Amsig Basket + BTC,official,full,2026-01-01,2026-10-12,284,0.255,-0.0444,0.2994,0.544,0.81,-0.3634,0.0,-0.0
+basket_ex_btc,Amsig Basket (ex-BTC),official,live,2026-10-09,2026-10-13,4,-0.0168,0.0013,-0.0182,0.775,-1.7,-0.0625,0.0,-0.0
+basket_with_btc,Amsig Basket + BTC,official,full,2026-01-01,2026-10-13,285,0.18,-0.066,0.246,0.5474,0.66,-0.3634,0.0,-0.0
 basket_with_btc,Amsig Basket + BTC,official,backtest,2026-01-01,2026-10-09,281,0.1986,-0.0672,0.2659,0.5458,0.7,-0.3634,0.0,-0.0
-basket_with_btc,Amsig Basket + BTC,official,live,2026-10-09,2026-10-12,3,0.0471,0.0245,0.0225,0.2194,25.77,0.0,0.0,-0.0
-bench_btc,BTC only,benchmark,full,2026-01-01,2026-10-12,284,-0.0444,-0.0444,0.0,0.4534,0.1,-0.3956,0.0,-0.0
+basket_with_btc,Amsig Basket + BTC,official,live,2026-10-09,2026-10-13,4,-0.0155,0.0013,-0.0169,0.741,-1.64,-0.0598,0.0,-0.0
+bench_btc,BTC only,benchmark,full,2026-01-01,2026-10-13,285,-0.066,-0.066,0.0,0.4533,0.03,-0.3956,0.0,-0.0
 bench_btc,BTC only,benchmark,backtest,2026-01-01,2026-10-09,281,-0.0672,-0.0672,-0.0,0.4555,0.03,-0.3956,0.0,-0.0
-bench_btc,BTC only,benchmark,live,2026-10-09,2026-10-12,3,0.0245,0.0245,0.0,0.0649,45.64,0.0,0.0,-0.0
-bench_eth,ETH only,benchmark,full,2026-01-01,2026-10-12,284,-0.1466,-0.0444,-0.1022,0.6174,-0.02,-0.5328,0.0,-0.0
+bench_btc,BTC only,benchmark,live,2026-10-09,2026-10-13,4,0.0013,0.0013,0.0,0.2987,0.52,-0.0227,0.0,-0.0
+bench_eth,ETH only,benchmark,full,2026-01-01,2026-10-13,285,-0.1765,-0.066,-0.1105,0.6176,-0.1,-0.5328,0.0,-0.0
 bench_eth,ETH only,benchmark,backtest,2026-01-01,2026-10-09,281,-0.1674,-0.0672,-0.1002,0.6205,-0.08,-0.5328,0.0,-0.0
-bench_eth,ETH only,benchmark,live,2026-10-09,2026-10-12,3,0.025,0.0245,0.0005,0.0668,45.24,0.0,0.0,-0.0
-lab_ex_btc_monthly,"Lab: ex-BTC, equal weight, monthly rebalance",lab,full,2026-01-01,2026-10-12,284,0.292,-0.0444,0.3363,0.5629,0.87,-0.3868,1.3848,-0.0015
+bench_eth,ETH only,benchmark,live,2026-10-09,2026-10-13,4,-0.0109,0.0013,-0.0122,0.4171,-2.22,-0.035,0.0,-0.0
+lab_ex_btc_monthly,"Lab: ex-BTC, equal weight, monthly rebalance",lab,full,2026-01-01,2026-10-13,285,0.2192,-0.066,0.2852,0.5657,0.73,-0.3868,1.3782,-0.0015
 lab_ex_btc_monthly,"Lab: ex-BTC, equal weight, monthly rebalance",lab,backtest,2026-01-01,2026-10-09,281,0.2307,-0.0672,0.298,0.5647,0.76,-0.3868,1.4054,-0.0015
-lab_ex_btc_monthly,"Lab: ex-BTC, equal weight, monthly rebalance",lab,live,2026-10-09,2026-10-12,3,0.0498,0.0245,0.0252,0.2525,23.67,0.0,0.0,-0.0
-lab_ex_btc_mcap_capped,"Lab: ex-BTC, market-cap weight, 25% cap, quarterly rebalance",lab,full,2026-01-01,2026-10-12,284,0.1768,-0.0444,0.2211,0.5025,0.67,-0.3598,0.415,-0.0004
+lab_ex_btc_monthly,"Lab: ex-BTC, equal weight, monthly rebalance",lab,live,2026-10-09,2026-10-13,4,-0.0094,0.0013,-0.0107,0.7246,-0.91,-0.0563,0.0,-0.0
+lab_ex_btc_mcap_capped,"Lab: ex-BTC, market-cap weight, 25% cap, quarterly rebalance",lab,full,2026-01-01,2026-10-13,285,0.124,-0.066,0.19,0.5043,0.55,-0.3598,0.4133,-0.0004
 lab_ex_btc_mcap_capped,"Lab: ex-BTC, market-cap weight, 25% cap, quarterly rebalance",lab,backtest,2026-01-01,2026-10-09,281,0.1409,-0.0672,0.2082,0.5047,0.59,-0.3598,0.4207,-0.0004
-lab_ex_btc_mcap_capped,"Lab: ex-BTC, market-cap weight, 25% cap, quarterly rebalance",lab,live,2026-10-09,2026-10-12,3,0.0314,0.0245,0.0069,0.1485,25.52,0.0,0.0,-0.0
-lab_conviction_example,"Lab: conviction weights (example, edit me)",lab,full,2026-01-01,2026-10-12,284,0.247,-0.0444,0.2913,0.5566,0.79,-0.3543,0.0,-0.0
+lab_ex_btc_mcap_capped,"Lab: ex-BTC, market-cap weight, 25% cap, quarterly rebalance",lab,live,2026-10-09,2026-10-13,4,-0.0149,0.0013,-0.0162,0.5413,-2.31,-0.0449,0.0,-0.0
+lab_conviction_example,"Lab: conviction weights (example, edit me)",lab,full,2026-01-01,2026-10-13,285,0.1728,-0.066,0.2388,0.5599,0.64,-0.3543,0.0,-0.0
 lab_conviction_example,"Lab: conviction weights (example, edit me)",lab,backtest,2026-01-01,2026-10-09,281,0.1942,-0.0672,0.2615,0.5587,0.69,-0.3543,0.0,-0.0
-lab_conviction_example,"Lab: conviction weights (example, edit me)",lab,live,2026-10-09,2026-10-12,3,0.0441,0.0245,0.0196,0.1965,27.0,0.0,0.0,-0.0
+lab_conviction_example,"Lab: conviction weights (example, edit me)",lab,live,2026-10-09,2026-10-13,4,-0.018,0.0013,-0.0193,0.7251,-2.0,-0.0595,0.0,-0.0
